@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Notti</string>
+    <string name="title_activity_note_main">NoteMainActivity</string>
+    <string name="title_notes">Notes</string>
+    <string name="title_groups">Groups</string>
+    <string name="title_notifications">Notifications</string>
+</resources>
