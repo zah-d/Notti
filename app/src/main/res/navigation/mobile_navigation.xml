@@ -10,8 +10,7 @@
         android:id="@+id/navigation_notes"
         android:name="com.firebase.notti.ui.notes.NotesFragment"
         android:label="@string/title_notes"
-        tools:layout="@layout/fragment_notes"
-        />
+        tools:layout="@layout/fragment_notes" />
 
     <fragment
         android:id="@+id/navigation_groups"

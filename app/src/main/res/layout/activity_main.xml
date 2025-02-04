@@ -5,20 +5,15 @@
     android:id="@+id/notti_logo_background_color"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_navigation"
+    android:background="#5A74D3"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/notti_loggo"
+    <ImageView
+        android:id="@+id/imageView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/amita_bold"
-        android:text="Notti"
-        android:textColor="@color/black"
-        android:textSize="60sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logo_2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

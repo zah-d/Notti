@@ -4,6 +4,7 @@
     <item
         android:id="@+id/navigation_notes"
         android:icon="@drawable/ic_notes_frag"
+        android:layout_height="100dp"
         android:title="@string/title_notes" />
 
     <item
