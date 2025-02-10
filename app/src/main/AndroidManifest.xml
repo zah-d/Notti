@@ -13,6 +13,11 @@
         android:theme="@style/Theme.Notti"
         tools:targetApi="31">
         <activity
+            android:name=".NewNoteActivity"
+            android:exported="false"
+            android:label="@string/title_activity_new_note"
+            android:theme="@style/Theme.Notti" />
+        <activity
             android:name=".FullscreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false"

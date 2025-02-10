@@ -1,28 +1,85 @@
 package com.firebase.notti.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class Note {
     private String userId;
+    private List<String> secodaryUserIds = new ArrayList<>();
     private String id;
     private String title;
-    private String lastMessage;
-    private long timestamp;
+    private boolean isFavorite;
 
-    public Note() { } // Required for Firebase
+    private List<NoteMessage> messages = new ArrayList<>();
 
-    public Note(String id, String title, String lastMessage, long timestamp) {
-        this.userId = UUID.randomUUID().toString();
-        this.id = id;
+    public Note() {
+        this.id = UUID.randomUUID().toString();
+        this.title = "No Title";
+    } // Required for Firebase
+
+    public Note(String userId, String title) {
+        this.id = UUID.randomUUID().toString();
+        this.userId = userId;
         this.title = title;
-        this.lastMessage = lastMessage;
-        this.timestamp = timestamp;
     }
 
-    public String getId() { return id; }
-    public String getTitle() { return title; }
-    public String getLastMessage() { return lastMessage; }
-    public long getTimestamp() { return timestamp; }
+    public Note(String userId, String title, NoteMessage message) {
+        this(userId,title);
+        messages.add(message);
+    }
 
-    public String getUserId() { return userId; }
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
+    }
+
+    public void addMessage(NoteMessage message) {
+        this.messages.add(message);
+    }
+
+    public List<NoteMessage> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<NoteMessage> messages) {
+        this.messages = messages;
+    }
+
+    public void addSecondaryUser(String userId) {
+        this.secodaryUserIds.add(userId);
+    }
+
+    public String getId() {
+        return this.id;
+    }
+    public String getTitle() {
+        return this.title;
+    }
+    public String getUserId() {
+        return this.userId;
+    }
+
+    public List<String> getSecodaryUserIds() {
+        return this.secodaryUserIds;
+    }
+
+    public void setSecodaryUserIds(List<String> secodaryUserIds) {
+        this.secodaryUserIds = secodaryUserIds;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public NoteMessage getLastMessage() {
+        return messages.get(messages.size()-1);
+    }
 }

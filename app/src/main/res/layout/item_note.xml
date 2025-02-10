@@ -48,6 +48,19 @@
         app:layout_constraintTop_toBottomOf="@id/circularIcon"
         android:layout_marginTop="10dp"/>
 
+    <!-- Favorite Star Icon -->
+    <ImageView
+        android:id="@+id/favoriteIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:background="@android:drawable/btn_star_big_off"
+        android:contentDescription="Favorite"
+        app:tint="@android:color/darker_gray"
+        android:clickable="true"
+        app:layout_constraintTop_toBottomOf="@id/noteLastMessageDateTime"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="5dp" />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

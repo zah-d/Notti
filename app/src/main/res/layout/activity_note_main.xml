@@ -11,19 +11,85 @@
         android:layout_height="?attr/actionBarSize"
         android:background="@color/background_navigation"
         android:elevation="4dp"
-        app:titleTextColor="@android:color/black"
+        app:titleTextAppearance="@style/ToolbarTitleText"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <!-- RecyclerView below Toolbar -->
+        <!-- Custom Title TextView -->
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title_notes2"
+            android:textAppearance="@style/ToolbarTitleText"
+            android:textStyle="bold"
+            android:layout_gravity="center" />
+
+        <!-- User Image (Now Works as Menu Button) -->
+        <FrameLayout
+            android:id="@+id/user_menu_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="start|center_vertical"
+            android:layout_marginTop="@dimen/activity_horizontal_margin">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/img_user"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/zah_user"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/background_navigation"
+                app:shapeAppearanceOverlay="@style/CircleImageView"
+                android:contentDescription="User Image"/>
+
+
+            <!-- Online Status Indicator -->
+            <!--View
+                android:id="@+id/online_status"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:background="@drawable/circle_border"
+                android:layout_gravity="bottom|end"
+                android:layout_marginBottom="4dp"
+                android:layout_marginEnd="4dp"/-->
+        </FrameLayout>
+
+        <!-- Search EditText -->
+        <EditText
+            android:id="@+id/search_bar"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/background_navigation"
+            android:hint="Search notes..."
+            android:padding="8dp"
+            android:layout_gravity="end"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/darker_gray"
+            android:visibility="gone"/>
+
+        <!-- Search Icon -->
+        <ImageView
+            android:id="@+id/search_icon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@android:drawable/ic_menu_search"
+            android:layout_marginStart="8dp"
+            android:layout_gravity="end"
+            app:tint="@android:color/white" />
+
+    </androidx.appcompat.widget.Toolbar>
 
     <!-- NavHostFragment for Navigation -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/background_navigation"
+        android:background="@android:color/darker_gray"
         app:layout_constraintBottom_toTopOf="@id/nav_host_fragment_activity_note_main"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -42,7 +108,32 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:navGraph="@navigation/mobile_navigation" />
 
+    <!-- NavHostFragment for Navigation -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_lower"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintBottom_toTopOf="@id/nav_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/nav_host_fragment_activity_note_main" />
+
     <!-- Bottom Navigation View -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_add_note"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:backgroundTint="@color/background_navigation_light_grey"
+        android:contentDescription="Add Note"
+        android:src="@mipmap/ic_user_zah_round"
+        android:tint="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@id/nav_view"
+        app:layout_constraintBottom_toBottomOf="@id/nav_view"
+        android:layout_marginBottom="30dp"/>
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_view"
         android:layout_width="0dp"
@@ -51,6 +142,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:menu="@menu/bottom_nav_menu" />
+        app:menu="@menu/bottom_nav_menu"
+        app:itemIconSize="40dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
