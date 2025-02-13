@@ -20,6 +20,9 @@ import com.firebase.notti.model.Note;
 import com.firebase.notti.model.NoteMessage;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -56,7 +59,7 @@ public class NotesFragment extends Fragment {
     }
 
     private void loadNotesFromFirebase() {
-        notesList.clear();
+        //notesList.clear();
         /*FirebaseFirestore.getInstance().collection("notes")
                 .orderBy("timestamp")
                 .addSnapshotListener((value, error) -> {
@@ -68,36 +71,61 @@ public class NotesFragment extends Fragment {
                     }
                     notesAdapter.notifyDataSetChanged();
                 });*/
+        if (notesList.isEmpty()){
 
-        NoteMessage m = new NoteMessage("Zah_Darbiani","קשימה מעודכנת..", "String", System.currentTimeMillis());
-        notesList.add(new Note("Zah_Darbiani", "קניות",m));
+            Calendar calNote = Calendar.getInstance();
+            calNote.setTime(new Date(System.currentTimeMillis()));
 
-        m = new NoteMessage("Zah_Darbiani","ריקודים אמילי שעות..", "String", System.currentTimeMillis());
-        notesList.add(new Note("Zah_Darbiani", "חוגים",m));
+            for (int i=1 ; i <= 10 ; i++) {
+                NoteMessage m = new NoteMessage("Zah_Darbiani","- קשימה מעודכנת.."+i, "String", calNote.getTime().getTime());
+                notesList.add(new Note("Zah_Darbiani", "קניות",m));
 
-        m = new NoteMessage("Zah_Darbiani","Got it! Since your search bar is in the Main Activity and your note list is inside fragment_notes, \nyou need a way to communicate between them.", "String", System.currentTimeMillis());
-        notesList.add(new Note("Zah_Darbiani", "Chat Gpt",m));
+                calNote.add(Calendar.DAY_OF_YEAR, -1);
 
-        m = new NoteMessage("Zah_Darbiani","להזמין קבלן בידוד..", "String", System.currentTimeMillis());
-        notesList.add(new Note("Zah_Darbiani", "בניה",m));
+                // Subtract 2 hours
+                //calNote.add(Calendar.HOUR_OF_DAY, -2);
+                m = new NoteMessage("Zah_Darbiani","- ריקודים אמילי שעות.."+i, "String", calNote.getTime().getTime());
+                notesList.add(new Note("Zah_Darbiani", "חוגים",m));
 
-        m = new NoteMessage("Zah_Darbiani","לתקן ציליה, תנור לבדוק..", "String", System.currentTimeMillis());
-        notesList.add(new Note("Zah_Darbiani", "צהרון",m));
+                m = new NoteMessage("Zah_Darbiani","Got it! Since your search bar is in the Main Activity and your note list is inside fragment_notes, \nyou need a way to communicate between them.", "String", calNote.getTime().getTime());
+                notesList.add(new Note("Zah_Darbiani", "Chat Gpt",m));
 
-        m = new NoteMessage("Zah_Darbiani","מחשבים אין סתם פתק..", "String", System.currentTimeMillis());
-        notesList.add(new Note("Zah_Darbiani", "מיחשוב",m));
+                calNote.add(Calendar.DAY_OF_YEAR, -1);
+                m = new NoteMessage("Zah_Darbiani","- להזמין קבלן בידוד.."+i, "String", calNote.getTime().getTime());
+                notesList.add(new Note("Zah_Darbiani", "בניה",m));
 
-        m = new NoteMessage("Zah_Darbiani","אני הולך לספר סיפור על פתק..", "String", System.currentTimeMillis());
-        notesList.add(new Note("Zah_Darbiani", "סיפורים",m));
+                calNote.add(Calendar.DAY_OF_YEAR, -1);
+                m = new NoteMessage("Zah_Darbiani","- לתקן ציליה, תנור לבדוק.."+i, "String", calNote.getTime().getTime());
+                notesList.add(new Note("Zah_Darbiani", "צהרון",m));
 
-        m = new NoteMessage("Zah_Darbiani","משימות אצל אמא שלי..", "String", System.currentTimeMillis());
-        notesList.add(new Note("Zah_Darbiani", "אמא",m));
+                calNote.add(Calendar.DAY_OF_YEAR, -1);
+                m = new NoteMessage("Zah_Darbiani","- מחשבים אין סתם פתק.."+i, "String", calNote.getTime().getTime());
+                notesList.add(new Note("Zah_Darbiani", "מיחשוב",m));
 
-        m = new NoteMessage("Zah_Darbiani","לדבר עם עידן על העבודה..", "String", System.currentTimeMillis());
-        notesList.add(new Note("Zah_Darbiani", "עבודה",m));
+                calNote.add(Calendar.DAY_OF_YEAR, -1);
+                m = new NoteMessage("Zah_Darbiani","- אני הולך לספר סיפור על פתק.."+i, "String", calNote.getTime().getTime());
+                notesList.add(new Note("Zah_Darbiani", "סיפורים",m));
 
-        m = new NoteMessage("Zah_Darbiani","שיעורי בית בחשבון אמילי וגם שפה..", "String", System.currentTimeMillis());
-        notesList.add(new Note("Zah_Darbiani", "בית ספר",m));
+                m = new NoteMessage("Zah_Darbiani","- משימות אצל אמא שלי.."+i, "String", calNote.getTime().getTime());
+                notesList.add(new Note("Zah_Darbiani", "אמא",m));
+
+                m = new NoteMessage("Zah_Darbiani","- לדבר עם עידן על העבודה.."+i, "String", calNote.getTime().getTime());
+                notesList.add(new Note("Zah_Darbiani", "עבודה",m));
+
+                m = new NoteMessage("Zah_Darbiani","- שיעורי בית בחשבון אמילי וגם שפה.."+i, "String", calNote.getTime().getTime());
+                notesList.add(new Note("Zah_Darbiani", "בית ספר",m));
+            }
+        }
+
+        notesList.sort((note1, note2) -> {
+            // 1. Compare by favorite (true first)
+            if (note1.isFavorite() != note2.isFavorite()) {
+                return note1.isFavorite() ? -1 : 1; // Favorite notes first
+            }
+
+            // 2. If both are the same favorite status, compare by dateTime (latest first)
+            return new Date(note2.getLastMessage().getTimestamp()).compareTo(new Date(note1.getLastMessage().getTimestamp()));
+        });
 
         notesAdapter.setNotesFullList(notesList);
 

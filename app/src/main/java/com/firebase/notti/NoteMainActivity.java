@@ -118,6 +118,7 @@ public class NoteMainActivity extends AppCompatActivity {
                 // Hide keyboard
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(searchBar.getWindowToken(), 0);
+                NotesAdapter.getInstance().resetList();
             }
         });
 

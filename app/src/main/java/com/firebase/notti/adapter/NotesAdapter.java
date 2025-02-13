@@ -21,6 +21,7 @@ import com.firebase.notti.model.NoteMessage;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -34,6 +35,8 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     private final Context context;
     private List<Note> notesList;
     private List<Note> fullNotesList; // Backup for filtering
+
+    private List<Note> favoritNotesList;
 
     public NotesAdapter(Context context, List<Note> notesList) {
         this.context = context;
@@ -61,7 +64,8 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         NoteMessage lastmessage = note.getLastMessage();
         holder.title.setText(note.getTitle());
         holder.lastMessage.setText((String)lastmessage.getMessage());
-        holder.lastMessageDateTime.setText(sdf.format(new Date(lastmessage.getTimestamp())));
+
+        holder.lastMessageDateTime.setText(getDateText(lastmessage.getTimestamp()));
 
         Drawable newIcon = ContextCompat.getDrawable(holder.itemView.getContext(),
                 note.isFavorite() ? android.R.drawable.btn_star_big_on : android.R.drawable.btn_star_big_off
@@ -88,7 +92,18 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             );
             holder.favoriteIcon.setBackground(newIcon2);
             holder.favoriteIcon.invalidate();
-            notifyItemChanged(position);
+            //notifyItemChanged(position);
+
+            notesList.sort((note1, note2) -> {
+                // 1. Compare by favorite (true first)
+                if (note1.isFavorite() != note2.isFavorite()) {
+                    return note1.isFavorite() ? -1 : 1; // Favorite notes first
+                }
+
+                // 2. If both are the same favorite status, compare by dateTime (latest first)
+                return new Date(note2.getLastMessage().getTimestamp()).compareTo(new Date(note1.getLastMessage().getTimestamp()));
+            });
+            notifyDataSetChanged();
         });
 
     }
@@ -113,11 +128,51 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     public void updateNotes(List<Note> newNotes) {
         notesList.clear();
         notesList.addAll(newNotes);
+        notesList.sort((note1, note2) -> {
+            // 1. Compare by favorite (true first)
+            if (note1.isFavorite() != note2.isFavorite()) {
+                return note1.isFavorite() ? -1 : 1; // Favorite notes first
+            }
+
+            // 2. If both are the same favorite status, compare by dateTime (latest first)
+            return new Date(note2.getLastMessage().getTimestamp()).compareTo(new Date(note1.getLastMessage().getTimestamp()));
+        });
         notifyDataSetChanged();
     }
 
     public void resetList() {
         updateNotes(fullNotesList);
+    }
+
+    public static String getDateText(long d_note_timestamp) {
+        String textToShow = "";
+        Date d_now = new Date(System.currentTimeMillis());
+        Date d_note = new Date(d_note_timestamp);
+        // Get calendar instances for comparison
+        Calendar calNow = Calendar.getInstance();
+        calNow.setTime(d_now);
+
+        Calendar calNote = Calendar.getInstance();
+        calNote.setTime(d_note);
+
+        // Check if d_note is today
+        if (calNow.get(Calendar.YEAR) == calNote.get(Calendar.YEAR) &&
+                calNow.get(Calendar.DAY_OF_YEAR) == calNote.get(Calendar.DAY_OF_YEAR)) {
+            textToShow = "Today";
+        }
+        // Check if d_note is yesterday
+        else {
+            calNow.add(Calendar.DAY_OF_YEAR, -1); // Move one day back
+            if (calNow.get(Calendar.YEAR) == calNote.get(Calendar.YEAR) &&
+                    calNow.get(Calendar.DAY_OF_YEAR) == calNote.get(Calendar.DAY_OF_YEAR)) {
+                textToShow = "Yesterday";
+            } else {
+                // Format the date as "dd/MM/yyyy" (or another preferred format)
+                textToShow = sdf.format(d_note);
+            }
+        }
+
+        return textToShow;
     }
 
     public static class NoteViewHolder extends RecyclerView.ViewHolder {

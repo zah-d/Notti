@@ -75,8 +75,8 @@
         <!-- Search Icon -->
         <ImageView
             android:id="@+id/search_icon"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:src="@android:drawable/ic_menu_search"
             android:layout_marginStart="8dp"
             android:layout_gravity="end"
@@ -88,7 +88,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="-10dp"
         android:background="@android:color/darker_gray"
         app:layout_constraintBottom_toTopOf="@id/nav_host_fragment_activity_note_main"
         app:layout_constraintEnd_toEndOf="parent"
@@ -109,7 +109,7 @@
         app:navGraph="@navigation/mobile_navigation" />
 
     <!-- NavHostFragment for Navigation -->
-    <androidx.recyclerview.widget.RecyclerView
+    <!--androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_lower"
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -118,7 +118,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/nav_host_fragment_activity_note_main" />
+        app:layout_constraintTop_toBottomOf="@id/nav_host_fragment_activity_note_main" /-->
 
     <!-- Bottom Navigation View -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -143,6 +143,6 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:menu="@menu/bottom_nav_menu"
-        app:itemIconSize="40dp" />
+        app:itemIconSize="25dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
