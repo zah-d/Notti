@@ -77,10 +77,17 @@ public class NotesFragment extends Fragment {
             calNote.setTime(new Date(System.currentTimeMillis()));
 
             for (int i=1 ; i <= 10 ; i++) {
+                List<NoteMessage> lst = new ArrayList<>();
+                for (int j=1 ; j <= 10 ; j++) {
+                    calNote.add(Calendar.DAY_OF_YEAR, -1);
+                    lst.add(0,new NoteMessage("Zah_Darbiani","- קשימה מעודכנת.."+j, "String", calNote.getTime().getTime()));
+                }
+                Note n = new Note("Zah_Darbiani", "קניות",lst);
                 NoteMessage m = new NoteMessage("Zah_Darbiani","- קשימה מעודכנת.."+i, "String", calNote.getTime().getTime());
-                notesList.add(new Note("Zah_Darbiani", "קניות",m));
 
-                calNote.add(Calendar.DAY_OF_YEAR, -1);
+                notesList.add(n);
+
+
 
                 // Subtract 2 hours
                 //calNote.add(Calendar.HOUR_OF_DAY, -2);

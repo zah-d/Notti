@@ -1,8 +1,9 @@
 package com.firebase.notti;
 
+import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.os.Bundle;
 
 public class NewNoteActivity extends AppCompatActivity {
 
@@ -10,5 +11,6 @@ public class NewNoteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_note);
+
     }
 }

@@ -29,6 +29,11 @@ public class Note {
         messages.add(message);
     }
 
+    public Note(String userId, String title, List<NoteMessage> messages) {
+        this(userId,title);
+        this.messages.addAll(0,messages);
+    }
+
     public boolean isFavorite() {
         return isFavorite;
     }

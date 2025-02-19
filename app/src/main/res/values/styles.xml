@@ -24,6 +24,12 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
+    <style name="NoteToolbarTitleText">
+        <item name="android:fontFamily">@font/allura</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
     <style name="NoteText">
         <item name="android:fontFamily">@font/allura</item>
         <item name="android:textSize">40sp</item>

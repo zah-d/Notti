@@ -13,11 +13,13 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.firebase.notti.NewNoteActivity;
 import com.firebase.notti.NoteActivity;
 import com.firebase.notti.NoteMainActivity;
 import com.firebase.notti.R;
 import com.firebase.notti.model.Note;
 import com.firebase.notti.model.NoteMessage;
+import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -30,11 +32,18 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
 
     private static NotesAdapter instance;
 
+    public static Gson gson = new Gson();
+
     public static SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.US);
+    public static SimpleDateFormat sdf_short = new SimpleDateFormat("dd.MM", Locale.US);
 
     private final Context context;
     private List<Note> notesList;
     private List<Note> fullNotesList; // Backup for filtering
+
+    private static Note focusedNote;
+
+    private static int focusedNoteLocation;
 
     private List<Note> favoritNotesList;
 
@@ -48,6 +57,10 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
 
     public static NotesAdapter getInstance() {
         return instance;
+    }
+
+    public static Note getClickedNote(){
+        return focusedNote;
     }
 
     @NonNull
@@ -79,6 +92,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             Intent intent = new Intent(context, NoteActivity.class);
             intent.putExtra("noteId", note.getId());
             intent.putExtra("noteTitle", note.getTitle());
+            intent.putExtra("selected_note", gson.toJson(note));
+            focusedNote = note;
+            focusedNoteLocation = position;
             context.startActivity(intent);
         });
 
@@ -125,6 +141,20 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         this.fullNotesList = new ArrayList<>(notesFromDB);
     }
 
+    public void addNoteMessage(NoteMessage message, boolean reset) {
+            Note note = getClickedNote();
+            note.addMessage(message);
+
+            Note cacheNote = notesList.get(focusedNoteLocation);
+            if (cacheNote != null) {
+                cacheNote.addMessage(message);
+                if (reset) {
+                    fullNotesList = notesList;
+                }
+            }
+            notifyDataSetChanged();
+    }
+
     public void updateNotes(List<Note> newNotes) {
         notesList.clear();
         notesList.addAll(newNotes);
@@ -156,17 +186,23 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         calNote.setTime(d_note);
 
         // Check if d_note is today
-        if (calNow.get(Calendar.YEAR) == calNote.get(Calendar.YEAR) &&
-                calNow.get(Calendar.DAY_OF_YEAR) == calNote.get(Calendar.DAY_OF_YEAR)) {
-            textToShow = "Today";
+        if (calNow.get(Calendar.YEAR) == calNote.get(Calendar.YEAR) && calNow.get(Calendar.MONTH) == calNote.get(Calendar.MONTH)) {
+            if (calNow.get(Calendar.DAY_OF_YEAR) == calNote.get(Calendar.DAY_OF_YEAR)) {
+                textToShow = "היום";
+            }
+            else {
+                // Format the date as "dd/MM" (or another preferred format)
+                textToShow = sdf_short.format(d_note);
+            }
         }
         // Check if d_note is yesterday
         else {
             calNow.add(Calendar.DAY_OF_YEAR, -1); // Move one day back
-            if (calNow.get(Calendar.YEAR) == calNote.get(Calendar.YEAR) &&
+            if (calNow.get(Calendar.YEAR) == calNote.get(Calendar.YEAR) && calNow.get(Calendar.MONTH) == calNote.get(Calendar.MONTH) &&
                     calNow.get(Calendar.DAY_OF_YEAR) == calNote.get(Calendar.DAY_OF_YEAR)) {
-                textToShow = "Yesterday";
-            } else {
+                textToShow = "אתמול";
+            }
+            else {
                 // Format the date as "dd/MM/yyyy" (or another preferred format)
                 textToShow = sdf.format(d_note);
             }
