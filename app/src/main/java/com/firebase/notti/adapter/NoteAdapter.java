@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.notti.R;
 import com.firebase.notti.model.Note;
 import com.firebase.notti.model.NoteMessage;
+import com.firebase.notti.utils.DateUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,21 +26,16 @@ import java.util.Locale;
 import java.util.Map;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MessageViewHolder>{
-    private List<NoteMessage> messagesList;
 
-    private List<NoteMessage> fullMessageList; // Backup for filtering
+    private Note note;
 
     private static NoteAdapter instance;
 
     private final Context context;
 
-    private static Map<Integer, String> position2Date = new HashMap<>();
-    // Format timestamp
-    public static SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
-    public NoteAdapter(Context context, List<NoteMessage> messagesList) {
+    public NoteAdapter(Context context, Note note) {
         this.context = context;
-        this.messagesList = messagesList;
-        this.fullMessageList = new ArrayList<>(messagesList);
+        this.note = note;
         if (instance == null) {
             instance = this;
         }
@@ -47,14 +43,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MessageViewHol
 
     public static NoteAdapter getInstance() {
         return instance;
-    }
-
-    public List<NoteMessage> getFullMessageList() {
-        return fullMessageList;
-    }
-
-    public List<NoteMessage> getMessagesList() {
-        return messagesList;
     }
 
     @NonNull
@@ -69,11 +57,11 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MessageViewHol
 
     @Override
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
-        NoteMessage message = messagesList.get(position);
+        NoteMessage message = note.getMessages().get(position);
         holder.messageText.setText((String)message.getMessage());
         if (position > 0) {
             Date d_now = new Date(message.getTimestamp());
-            Date d_note = new Date(messagesList.get(position-1).getTimestamp());
+            Date d_note = new Date(note.getMessages().get(position-1).getTimestamp());
             // Get calendar instances for comparison
             Calendar calNow = Calendar.getInstance();
             calNow.setTime(d_now);
@@ -86,40 +74,26 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MessageViewHol
                 if (calNow.get(Calendar.DAY_OF_YEAR) == calNote.get(Calendar.DAY_OF_YEAR)) {
                     holder.dateTimeContainer.setVisibility(View.GONE);
                 }
+                else{
+                    holder.dateTimeContainer.setVisibility(View.VISIBLE);
+                }
             }
             else{
                 holder.dateTimeContainer.setVisibility(View.VISIBLE);
             }
         }
         else{
-            position2Date.clear();
             holder.dateTimeContainer.setVisibility(View.VISIBLE);
         }
-        holder.messageDay.setText(NotesAdapter.getDateText(message.getTimestamp()));
-        holder.timestampText.setText(sdf.format(new Date(message.getTimestamp())));
+        holder.messageDay.setText(DateUtil.getDateText(message.getTimestamp()));
+        holder.timestampText.setText(DateUtil.sdf_short_hour.format(new Date(message.getTimestamp())));
     }
 
     @Override
     public int getItemCount() {
-
-        return messagesList.size();
+        return note.getMessages().size();
     }
 
-    public void updateMessages(List<NoteMessage> filteredList) {
-        messagesList.clear();
-        messagesList.addAll(filteredList);
-        messagesList.sort((m1, m2) -> {
-
-            // 2. If both are the same favorite status, compare by dateTime (latest first)
-            return new Date(m1.getTimestamp()).compareTo(new Date(m2.getTimestamp()));
-        });
-
-        notifyDataSetChanged();
-    }
-
-    public void resetList() {
-        updateMessages(fullMessageList);
-    }
 
     static class MessageViewHolder extends RecyclerView.ViewHolder {
         TextView messageText, timestampText, messageDay;

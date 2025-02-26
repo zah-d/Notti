@@ -111,7 +111,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:background="@color/background_navigation"
-            android:padding="8dp">
+            android:padding="12dp">
 
             <ImageButton
                 android:id="@+id/attachButton"
@@ -124,9 +124,18 @@
             <EditText
                 android:id="@+id/inputMessage"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
+                android:layout_height="48dp"
                 android:layout_weight="1"
+                android:background="@drawable/message_input_bg"
+                android:textColor="@color/white"
+                android:textColorHint="#888888"
+                android:padding="12dp"
+                android:paddingStart="50dp"
+                android:paddingEnd="5dp"
+                android:gravity="center_vertical"
+                android:imeOptions="actionSend"
+                android:maxLines="100"
+                android:inputType="textMultiLine"
                 android:hint="הודעה"/>
 
             <ImageButton

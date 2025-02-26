@@ -9,17 +9,18 @@ public class Note {
     private List<String> secodaryUserIds = new ArrayList<>();
     private String id;
     private String title;
-    private boolean isFavorite;
+    private boolean isFavorite = false;
+    private boolean isGroup = false;
 
     private List<NoteMessage> messages = new ArrayList<>();
 
     public Note() {
-        this.id = UUID.randomUUID().toString();
+        //this.id = UUID.randomUUID().toString();
         this.title = "No Title";
     } // Required for Firebase
 
     public Note(String userId, String title) {
-        this.id = UUID.randomUUID().toString();
+        //this.id = UUID.randomUUID().toString();
         this.userId = userId;
         this.title = title;
     }
@@ -32,6 +33,14 @@ public class Note {
     public Note(String userId, String title, List<NoteMessage> messages) {
         this(userId,title);
         this.messages.addAll(0,messages);
+    }
+
+    public boolean isGroup() {
+        return isGroup;
+    }
+
+    public void setGroup(boolean group) {
+        isGroup = group;
     }
 
     public boolean isFavorite() {
@@ -68,6 +77,10 @@ public class Note {
         return this.userId;
     }
 
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     public List<String> getSecodaryUserIds() {
         return this.secodaryUserIds;
     }
@@ -85,6 +98,9 @@ public class Note {
     }
 
     public NoteMessage getLastMessage() {
-        return messages.get(messages.size()-1);
+        if (messages == null || messages.isEmpty()) {
+            return null;
+        }
+        return messages.get(messages.size() - 1);
     }
 }
