@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.firebase.notti.adapter.NotesAdapter;
 import com.firebase.notti.cache.NottiCacheService;
 import com.firebase.notti.model.Note;
+import com.firebase.notti.model.NoteMessage;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -46,71 +47,53 @@ public class NoteMainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        try {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_note_main);
+
+        // Set up the Toolbar
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.background_navigation));
+
+        // Set up BottomNavigationView
+        BottomNavigationView navView = findViewById(R.id.nav_view);
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.navigation_notes, R.id.navigation_groups)
+                .build();
+
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_note_main);
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        NavigationUI.setupWithNavController(navView, navController);
 
 
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_note_main);
+        // User Image as Menu Button
+        FrameLayout userMenuButton = findViewById(R.id.user_menu_button);
+        userMenuButton.setOnClickListener(this::userMenu);
 
-            // Set up the Toolbar
-            Toolbar toolbar = findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
-
-            getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.background_navigation));
-
-            // Set up BottomNavigationView
-            BottomNavigationView navView = findViewById(R.id.nav_view);
-            AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                    R.id.navigation_notes, R.id.navigation_groups)
-                    .build();
-
-            NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_note_main);
-            NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-            NavigationUI.setupWithNavController(navView, navController);
-
-
-            // User Image as Menu Button
-            FrameLayout userMenuButton = findViewById(R.id.user_menu_button);
-            userMenuButton.setOnClickListener(this::userMenu);
-
-            // Initialize the ActivityResultLauncher
-            newNoteLauncher = registerForActivityResult(
-                    new ActivityResultContracts.StartActivityForResult(),
-                    result -> {
-                        if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                            String noteTitle = result.getData().getStringExtra("note_title");
-                            if (noteTitle != null && !noteTitle.isEmpty()) {
-                                NottiCacheService.getInstance().addNote(new Note("Zah_Darbiani", noteTitle));
-                                NotesAdapter.getInstance().notifyDataSetChanged();
-                            }
+        // Initialize the ActivityResultLauncher
+        newNoteLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                        String noteTitle = result.getData().getStringExtra("note_title");
+                        if (noteTitle != null && !noteTitle.isEmpty()) {
+                            Note note = new Note("Zah_Darbiani", noteTitle);
+                            note.addMessage(new NoteMessage("Zah_Darbiani","Welcome To Your New Note!","String", System.currentTimeMillis() ));
+                            NottiCacheService.getInstance().addNote(note);
+                            NotesAdapter.getInstance().notifyDataSetChanged();
                         }
                     }
-            );
+                }
+        );
 
-            FloatingActionButton fab = findViewById(R.id.fab_add_note);
-            fab.setOnClickListener(addNote());
+        FloatingActionButton fab = findViewById(R.id.fab_add_note);
+        fab.setOnClickListener(addNote());
 
-            searchBar = findViewById(R.id.search_bar);
-            searchIcon = findViewById(R.id.search_icon);
-            searchIcon.setOnClickListener(searchIconListener(searchBar));
-            searchBar.addTextChangedListener(searchTextListener());
-        }
-        catch (Exception e) {
-            String s="";
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == REQUEST_NEW_NOTE && resultCode == RESULT_OK && data != null) {
-            String noteTitle = data.getStringExtra("NOTE_TITLE");
-            if (noteTitle != null) {
-                Note newNote = new Note("Zah Darebiani", noteTitle);
-                NottiCacheService.getInstance().addNote(newNote);
-            }
-        }
+        searchBar = findViewById(R.id.search_bar);
+        searchIcon = findViewById(R.id.search_icon);
+        searchIcon.setOnClickListener(searchIconListener(searchBar));
+        searchBar.addTextChangedListener(searchTextListener());
     }
 
     private TextWatcher searchTextListener() {
@@ -188,5 +171,14 @@ public class NoteMainActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_note_main);
         return navController.navigateUp() || super.onSupportNavigateUp();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            // Reload data when returning from NoteActivity
+            NotesAdapter.getInstance().notifyDataSetChanged();
+        }
     }
 }

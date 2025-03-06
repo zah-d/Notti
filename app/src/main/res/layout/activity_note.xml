@@ -59,6 +59,22 @@
                 android:layout_marginEnd="4dp"/-->
         </FrameLayout>
 
+
+        <ImageButton
+            android:id="@+id/note_back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/back_button"
+            android:src="@android:drawable/ic_media_previous"
+            android:scaleType="centerInside"
+            app:tint="@color/black"
+            android:contentDescription="Back"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+
+            />
+
         <!-- Search EditText -->
         <EditText
             android:id="@+id/note_search_bar"
@@ -82,6 +98,7 @@
             android:layout_marginStart="8dp"
             android:layout_gravity="end"
             app:tint="@android:color/white" />
+
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -113,38 +130,91 @@
             android:background="@color/background_navigation"
             android:padding="12dp">
 
-            <ImageButton
-                android:id="@+id/attachButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="Attach"
-                android:background="@color/background_navigation"
-                android:src="@android:drawable/ic_menu_camera" />
-
-            <EditText
-                android:id="@+id/inputMessage"
+            <!-- Wrap EditText and attachButton inside FrameLayout -->
+            <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="48dp"
-                android:layout_weight="1"
-                android:background="@drawable/message_input_bg"
-                android:textColor="@color/white"
-                android:textColorHint="#888888"
-                android:padding="12dp"
-                android:paddingStart="50dp"
-                android:paddingEnd="5dp"
-                android:gravity="center_vertical"
-                android:imeOptions="actionSend"
-                android:maxLines="100"
-                android:inputType="textMultiLine"
-                android:hint="הודעה"/>
+                android:layout_weight="1">
 
-            <ImageButton
-                android:id="@+id/sendButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@android:drawable/ic_menu_send"
-                android:background="@color/background_navigation"
-                android:contentDescription="Send"/>
+                <EditText
+                    android:id="@+id/inputMessage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/message_input_bg"
+                    android:textColor="@color/white"
+                    android:textColorHint="#888888"
+                    android:padding="12dp"
+                    android:gravity="start|center_vertical"
+                    android:imeOptions="actionSend"
+                    android:maxLines="100"
+                    android:inputType="textMultiLine"
+                    />
+
+                <TextView
+                    android:id="@+id/inputMessageHint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="הודעה"
+                    android:textSize="15sp"
+                    android:layout_gravity="start|center_vertical"
+                    android:layout_marginStart="20dp"/>
+
+                <ImageButton
+                    android:id="@+id/cameraButton"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="end|center_vertical"
+                    android:background="@android:color/transparent"
+                    android:src="@android:drawable/ic_menu_camera"
+                    app:tint="@color/background_navigation_light_grey"
+                    android:contentDescription="Attach"
+                    android:layout_marginEnd="10dp"/>
+
+                <ImageButton
+                    android:id="@+id/attachButton"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="end|center_vertical"
+                    android:background="@android:color/transparent"
+                    android:src="@android:drawable/ic_menu_add"
+                    app:tint="@color/background_navigation_light_grey"
+                    android:contentDescription="Attach"
+                    android:layout_marginEnd="50dp"/>
+            </FrameLayout>
+
+
+            <FrameLayout
+                android:layout_width="50dp"
+                android:layout_height="48dp"
+                >
+                <ImageButton
+                    android:id="@+id/sendButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@android:drawable/ic_menu_send"
+                    android:background="@drawable/back_button"
+                    android:contentDescription="Send"
+                    android:scaleType="centerInside"
+                    app:tint="@color/black"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"/>
+
+                <ImageButton
+                    android:id="@+id/note_voice_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/back_button"
+                    android:src="@android:drawable/ic_btn_speak_now"
+                    android:scaleType="centerInside"
+                    app:tint="@color/black"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"/>
+
+            </FrameLayout>
+
+                />
         </LinearLayout>
     </LinearLayout>
 

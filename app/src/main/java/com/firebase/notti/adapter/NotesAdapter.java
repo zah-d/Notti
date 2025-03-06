@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.notti.NoteActivity;
 import com.firebase.notti.R;
 import com.firebase.notti.cache.NottiCacheService;
+import com.firebase.notti.db.NottiDBService;
 import com.firebase.notti.model.Note;
 import com.firebase.notti.model.NoteMessage;
 import com.firebase.notti.utils.DateUtil;
@@ -56,7 +57,11 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         //Note note = notesList.get(position);
         NoteMessage lastmessage = note.getLastMessage();
         holder.title.setText(note.getTitle());
-        holder.lastMessage.setText((String)lastmessage.getMessage());
+        String lastMessage = (String)lastmessage.getMessage();
+        if (lastMessage.length() > 39) {
+            lastMessage = lastMessage.substring(0,39) + "...";
+        }
+        holder.lastMessage.setText(lastMessage);
 
         holder.lastMessageDateTime.setText(DateUtil.getDateText(lastmessage.getTimestamp()));
 
@@ -88,6 +93,8 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             );
             holder.favoriteIcon.setBackground(newIcon2);
             holder.favoriteIcon.invalidate();
+
+            NottiDBService.getInstance().updateNoteFavorit(note);
             NottiCacheService.getInstance().filterNotes(null);
 
             notifyDataSetChanged();

@@ -110,6 +110,25 @@ public class NottiDBService {
                     }
                 });
     }
+
+    public void updateNoteFavorit(Note note) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("notes")
+                .document(note.getId()) // Make sure you're using the Firestore document ID
+                .update("favorite", note.isFavorite())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.i("Firestore", "Note updated successfully");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Firestore", "Error adding note", e);
+                    }
+                });
+    }
+    
     public void saveNoteMessage(Note note, NoteMessage message) {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();

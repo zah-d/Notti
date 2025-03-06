@@ -79,15 +79,17 @@ public class NottiCacheService {
 
     public void filterNoteMessages(String noteId, String query) {
         if (query == null) {
-            Note dbNote = NottiDBService.getInstance().getNoteCloned(noteId);
+            Note dbNote = NottiDBService.getInstance().getNote(noteId);
             Note cacheNote = getNote(noteId);
-            cacheNote.setMessages(dbNote.getMessages());
+            cacheNote.getMessages().clear();
+            cacheNote.getMessages().addAll(cacheNote.messages_backup);
         }
         else {
             Note note = getNote(noteId);
             List<NoteMessage> filteredMessages = new ArrayList<>();
             for (NoteMessage message : note.getMessages()) {
-                if (message.getMessage() instanceof String) {String msg = (String)message.getMessage();
+                if (message.getMessage() instanceof String) {
+                    String msg = (String)message.getMessage();
                     if (msg.toLowerCase().contains(query.toLowerCase())) {
                         filteredMessages.add(message);
                     }
@@ -119,18 +121,17 @@ public class NottiCacheService {
             while (notesIter.hasNext()) {
                 Note note = notesIter.next();
                 if (!note.getTitle().toLowerCase().contains(query.toLowerCase())) {
-                    notesIter.remove();
-                }
-                else {
+                    boolean match = false;
                     for (NoteMessage message : note.getMessages()) {
                         if (message.getMessage() instanceof String) {String msg = (String)message.getMessage();
-                            if (!msg.toLowerCase().contains(query.toLowerCase())) {
-                                notesIter.remove();
+                            if (msg.toLowerCase().contains(query.toLowerCase())) {
+                                match = true;
+                                break;
                             }
                         }
-                        else {
-                            notesIter.remove();
-                        }
+                    }
+                    if (!match) {
+                        notesIter.remove();
                     }
                 }
             }
@@ -138,6 +139,6 @@ public class NottiCacheService {
     }
 
     public void resetList() {
-        updateLists(NottiDBService.getInstance().getNotesCloned());
+        updateLists(NottiDBService.getInstance().getNotes());
     }
 }

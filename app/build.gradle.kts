@@ -52,5 +52,6 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore:25.1.2") // Firestore
     implementation("com.google.firebase:firebase-auth:23.2.0") // (Optional) Authentication
     implementation("com.google.firebase:firebase-storage:21.0.1") // (Optional) Storage
+    implementation("com.google.android.material:material:1.9.0")
 }
 

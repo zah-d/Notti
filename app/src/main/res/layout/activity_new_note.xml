@@ -25,9 +25,11 @@
         android:layout_height="wrap_content"
         android:hint="Note title"
         android:textColorHint="#888888"
+        android:textColor="@color/white"
         android:background="@drawable/message_input_bg"
         android:padding="10dp"
-        android:textSize="18sp"/>
+        android:textSize="20sp"
+        android:layout_marginTop="30dp"/>
 
     <!-- Create Button -->
     <Button
@@ -37,5 +39,5 @@
         android:text="Create"
         android:backgroundTint="@color/light_blue_600"
         android:textColor="@android:color/white"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginTop="30dp"/>
 </LinearLayout>
