@@ -9,7 +9,9 @@
     <color name="light_blue_A200">#FF40C4FF</color>
     <color name="light_blue_A400">#FF00B0FF</color>
     <color name="black_overlay">#66000000</color>
-    <color name="background_navigation_light_grey">#77B5FE</color>
+    <color name="background_navigation_light_grey">#E5E5E5</color>
+    <color name="whatapp_receive">#1E1E1E</color>
+    <color name="whatapp_send">#25D366</color>
     <color name="green">#00FF40</color>
     <color name="bubble_grey">#add8d2</color>
     <color name="bubble_time_dark">#2f2f2f</color>

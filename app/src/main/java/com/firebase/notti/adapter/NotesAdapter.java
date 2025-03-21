@@ -13,43 +13,27 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.firebase.notti.NewNoteActivity;
 import com.firebase.notti.NoteActivity;
-import com.firebase.notti.NoteMainActivity;
 import com.firebase.notti.R;
+import com.firebase.notti.cache.NottiCacheService;
+import com.firebase.notti.db.NottiDBService;
 import com.firebase.notti.model.Note;
 import com.firebase.notti.model.NoteMessage;
+import com.firebase.notti.utils.DateUtil;
+import com.firebase.notti.utils.ParsingUtil;
 import com.google.gson.Gson;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHolder> {
 
     private static NotesAdapter instance;
 
-    public static Gson gson = new Gson();
-
-    public static SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.US);
-    public static SimpleDateFormat sdf_short = new SimpleDateFormat("dd.MM", Locale.US);
-
     private final Context context;
-    private List<Note> notesList;
-    private List<Note> fullNotesList; // Backup for filtering
 
-    private static Note focusedNote;
-
-    private static int focusedNoteLocation;
-
-    private List<Note> favoritNotesList;
-
-    public NotesAdapter(Context context, List<Note> notesList) {
+    public NotesAdapter(Context context) {
         this.context = context;
-        this.notesList = notesList;
+        //this.notesList = notesList;
         if (instance == null) {
             instance = this;
         }
@@ -57,10 +41,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
 
     public static NotesAdapter getInstance() {
         return instance;
-    }
-
-    public static Note getClickedNote(){
-        return focusedNote;
     }
 
     @NonNull
@@ -73,12 +53,17 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
 
     @Override
     public void onBindViewHolder(@NonNull NoteViewHolder holder, int position) {
-        Note note = notesList.get(position);
+        Note note = NottiCacheService.getInstance().getNotesListInstance().get(position);
+        //Note note = notesList.get(position);
         NoteMessage lastmessage = note.getLastMessage();
         holder.title.setText(note.getTitle());
-        holder.lastMessage.setText((String)lastmessage.getMessage());
+        String lastMessage = (String)lastmessage.getMessage();
+        if (lastMessage.length() > 39) {
+            lastMessage = lastMessage.substring(0,39) + "...";
+        }
+        holder.lastMessage.setText(lastMessage);
 
-        holder.lastMessageDateTime.setText(getDateText(lastmessage.getTimestamp()));
+        holder.lastMessageDateTime.setText(DateUtil.getDateText(lastmessage.getTimestamp()));
 
         Drawable newIcon = ContextCompat.getDrawable(holder.itemView.getContext(),
                 note.isFavorite() ? android.R.drawable.btn_star_big_on : android.R.drawable.btn_star_big_off
@@ -92,9 +77,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             Intent intent = new Intent(context, NoteActivity.class);
             intent.putExtra("noteId", note.getId());
             intent.putExtra("noteTitle", note.getTitle());
-            intent.putExtra("selected_note", gson.toJson(note));
-            focusedNote = note;
-            focusedNoteLocation = position;
+            intent.putExtra("selected_note", ParsingUtil.gson.toJson(note));
+            //focusedNote = note;
+            //focusedNoteLocation = position;
             context.startActivity(intent);
         });
 
@@ -108,17 +93,10 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             );
             holder.favoriteIcon.setBackground(newIcon2);
             holder.favoriteIcon.invalidate();
-            //notifyItemChanged(position);
 
-            notesList.sort((note1, note2) -> {
-                // 1. Compare by favorite (true first)
-                if (note1.isFavorite() != note2.isFavorite()) {
-                    return note1.isFavorite() ? -1 : 1; // Favorite notes first
-                }
+            NottiDBService.getInstance().updateNoteFavorit(note);
+            NottiCacheService.getInstance().filterNotes(null);
 
-                // 2. If both are the same favorite status, compare by dateTime (latest first)
-                return new Date(note2.getLastMessage().getTimestamp()).compareTo(new Date(note1.getLastMessage().getTimestamp()));
-            });
             notifyDataSetChanged();
         });
 
@@ -126,90 +104,17 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
 
     @Override
     public int getItemCount() {
-        return notesList.size();
+        return NottiCacheService.getInstance().getNotesListInstance().size();
     }
 
     public List<Note> getNotesList() {
-        return notesList;
+        return NottiCacheService.getInstance().getNotesListInstance();
     }
 
-    public List<Note> getFullNotesList() {
-        return fullNotesList;
+    public List<Note> getClonedNotesList() {
+        return NottiCacheService.getInstance().getNotesClonedInstance();
     }
 
-    public void setNotesFullList(List<Note> notesFromDB){
-        this.fullNotesList = new ArrayList<>(notesFromDB);
-    }
-
-    public void addNoteMessage(NoteMessage message, boolean reset) {
-            Note note = getClickedNote();
-            note.addMessage(message);
-
-            Note cacheNote = notesList.get(focusedNoteLocation);
-            if (cacheNote != null) {
-                cacheNote.addMessage(message);
-                if (reset) {
-                    fullNotesList = notesList;
-                }
-            }
-            notifyDataSetChanged();
-    }
-
-    public void updateNotes(List<Note> newNotes) {
-        notesList.clear();
-        notesList.addAll(newNotes);
-        notesList.sort((note1, note2) -> {
-            // 1. Compare by favorite (true first)
-            if (note1.isFavorite() != note2.isFavorite()) {
-                return note1.isFavorite() ? -1 : 1; // Favorite notes first
-            }
-
-            // 2. If both are the same favorite status, compare by dateTime (latest first)
-            return new Date(note2.getLastMessage().getTimestamp()).compareTo(new Date(note1.getLastMessage().getTimestamp()));
-        });
-        notifyDataSetChanged();
-    }
-
-    public void resetList() {
-        updateNotes(fullNotesList);
-    }
-
-    public static String getDateText(long d_note_timestamp) {
-        String textToShow = "";
-        Date d_now = new Date(System.currentTimeMillis());
-        Date d_note = new Date(d_note_timestamp);
-        // Get calendar instances for comparison
-        Calendar calNow = Calendar.getInstance();
-        calNow.setTime(d_now);
-
-        Calendar calNote = Calendar.getInstance();
-        calNote.setTime(d_note);
-
-        // Check if d_note is today
-        if (calNow.get(Calendar.YEAR) == calNote.get(Calendar.YEAR) && calNow.get(Calendar.MONTH) == calNote.get(Calendar.MONTH)) {
-            if (calNow.get(Calendar.DAY_OF_YEAR) == calNote.get(Calendar.DAY_OF_YEAR)) {
-                textToShow = "היום";
-            }
-            else {
-                // Format the date as "dd/MM" (or another preferred format)
-                textToShow = sdf_short.format(d_note);
-            }
-        }
-        // Check if d_note is yesterday
-        else {
-            calNow.add(Calendar.DAY_OF_YEAR, -1); // Move one day back
-            if (calNow.get(Calendar.YEAR) == calNote.get(Calendar.YEAR) && calNow.get(Calendar.MONTH) == calNote.get(Calendar.MONTH) &&
-                    calNow.get(Calendar.DAY_OF_YEAR) == calNote.get(Calendar.DAY_OF_YEAR)) {
-                textToShow = "אתמול";
-            }
-            else {
-                // Format the date as "dd/MM/yyyy" (or another preferred format)
-                textToShow = sdf.format(d_note);
-            }
-        }
-
-        return textToShow;
-    }
 
     public static class NoteViewHolder extends RecyclerView.ViewHolder {
         TextView title, lastMessage, lastMessageDateTime;

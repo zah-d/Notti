@@ -1,5 +1,6 @@
 plugins {
     id("com.android.application")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -48,4 +49,9 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
     implementation("de.hdodenhof:circleimageview:3.1.0")
     implementation("com.google.code.gson:gson:2.10.1")
+    implementation("com.google.firebase:firebase-firestore:25.1.2") // Firestore
+    implementation("com.google.firebase:firebase-auth:23.2.0") // (Optional) Authentication
+    implementation("com.google.firebase:firebase-storage:21.0.1") // (Optional) Storage
+    implementation("com.google.android.material:material:1.9.0")
 }
+

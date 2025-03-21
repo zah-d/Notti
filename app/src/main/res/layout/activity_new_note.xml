@@ -1,10 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".NewNoteActivity">
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="@color/background_navigation"
+    android:gravity="center">
 
+    <!-- Title -->
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create New Note"
+        android:textSize="22sp"
+        android:textColor="@color/background_navigation_light_grey"
+        android:textStyle="normal"
+        android:paddingBottom="20dp"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- Note Title Input -->
+    <EditText
+        android:id="@+id/etNoteTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Note title"
+        android:textColorHint="#888888"
+        android:textColor="@color/white"
+        android:background="@drawable/message_input_bg"
+        android:padding="10dp"
+        android:textSize="20sp"
+        android:layout_marginTop="30dp"/>
+
+    <!-- Create Button -->
+    <Button
+        android:id="@+id/btnCreate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Create"
+        android:backgroundTint="@color/light_blue_600"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="30dp"/>
+</LinearLayout>
