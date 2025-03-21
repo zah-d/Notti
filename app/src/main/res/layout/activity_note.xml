@@ -59,22 +59,6 @@
                 android:layout_marginEnd="4dp"/-->
         </FrameLayout>
 
-
-        <ImageButton
-            android:id="@+id/note_back_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/back_button"
-            android:src="@android:drawable/ic_media_previous"
-            android:scaleType="centerInside"
-            app:tint="@color/black"
-            android:contentDescription="Back"
-            android:layout_gravity="end|center_vertical"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-
-            />
-
         <!-- Search EditText -->
         <EditText
             android:id="@+id/note_search_bar"
@@ -99,6 +83,20 @@
             android:layout_gravity="end"
             app:tint="@android:color/white" />
 
+        <ImageButton
+            android:id="@+id/note_back_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/icons8_back"
+            android:scaleType="centerInside"
+            android:background="@color/black"
+            app:tint="@color/light_blue_600"
+            android:contentDescription="Back"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+
+            />
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -133,20 +131,21 @@
             <!-- Wrap EditText and attachButton inside FrameLayout -->
             <FrameLayout
                 android:layout_width="0dp"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1">
 
                 <EditText
                     android:id="@+id/inputMessage"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:background="@drawable/message_input_bg"
                     android:textColor="@color/white"
                     android:textColorHint="#888888"
                     android:padding="12dp"
                     android:gravity="start|center_vertical"
                     android:imeOptions="actionSend"
-                    android:maxLines="100"
+                    android:maxLines="5"
+                    android:scrollbars="vertical"
                     android:inputType="textMultiLine"
                     />
 
@@ -176,7 +175,7 @@
                     android:layout_height="25dp"
                     android:layout_gravity="end|center_vertical"
                     android:background="@android:color/transparent"
-                    android:src="@android:drawable/ic_menu_add"
+                    android:src="@drawable/icons8_attach"
                     app:tint="@color/background_navigation_light_grey"
                     android:contentDescription="Attach"
                     android:layout_marginEnd="50dp"/>
@@ -191,7 +190,7 @@
                     android:id="@+id/sendButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@android:drawable/ic_menu_send"
+                    android:src="@drawable/icons8_send"
                     android:background="@drawable/back_button"
                     android:contentDescription="Send"
                     android:scaleType="centerInside"

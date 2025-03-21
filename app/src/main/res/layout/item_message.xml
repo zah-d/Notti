@@ -51,7 +51,7 @@
 
     <LinearLayout
         android:id="@+id/messageContainer"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@drawable/note_bubble"
         android:padding="10dp"
@@ -59,6 +59,7 @@
         android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@id/date_time_container"
         app:layout_constraintStart_toEndOf="@id/circularIconContainer"
+        app:layout_constraintEnd_toEndOf="parent"
         >
 
         <!-- Row with Icon and Message -->
@@ -71,6 +72,7 @@
                 android:id="@+id/messageText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxWidth="350dp"
                 android:text="ksdldjlskj lskdjslkjd lskj dslkjd lskj dlksjdlks"
                 android:textColor="@android:color/white"
                 android:textSize="16sp"/>

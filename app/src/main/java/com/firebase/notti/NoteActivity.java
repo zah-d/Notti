@@ -184,7 +184,7 @@ public class NoteActivity extends AppCompatActivity {
                     noteKeyboardHint.setVisibility(View.VISIBLE);
                     cameraButton.setVisibility(View.VISIBLE);
                     FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) attachButton.getLayoutParams();
-                    params.setMarginEnd(50);
+                    params.setMarginEnd(100);
                     attachButton.setLayoutParams(params);
                 }
                 else {
