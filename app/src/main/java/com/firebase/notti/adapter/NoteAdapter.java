@@ -1,12 +1,18 @@
 package com.firebase.notti.adapter;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,6 +38,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MessageViewHol
     private static NoteAdapter instance;
 
     private final Context context;
+
+    private String lastMessageDate = "";
 
     public NoteAdapter(Context context, Note note) {
         this.context = context;
@@ -59,34 +67,25 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MessageViewHol
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
         NoteMessage message = note.getMessages().get(position);
         holder.messageText.setText((String)message.getMessage());
+
+        String dateStr = DateUtil.getDateText(message.getTimestamp());
+        holder.messageDay.setText(dateStr);
+        holder.timestampText.setText(DateUtil.sdf_short_hour.format(new Date(message.getTimestamp())));
+
+
         if (position > 0) {
-            Date d_now = new Date(message.getTimestamp());
-            Date d_note = new Date(note.getMessages().get(position-1).getTimestamp());
-            // Get calendar instances for comparison
-            Calendar calNow = Calendar.getInstance();
-            calNow.setTime(d_now);
-
-            Calendar calNote = Calendar.getInstance();
-            calNote.setTime(d_note);
-
-            // Check if d_note is today
-            if (calNow.get(Calendar.YEAR) == calNote.get(Calendar.YEAR) && calNow.get(Calendar.MONTH) == calNote.get(Calendar.MONTH)) {
-                if (calNow.get(Calendar.DAY_OF_YEAR) == calNote.get(Calendar.DAY_OF_YEAR)) {
-                    holder.dateTimeContainer.setVisibility(View.GONE);
-                }
-                else{
-                    holder.dateTimeContainer.setVisibility(View.VISIBLE);
-                }
+            NoteMessage message_before = note.getMessages().get(position-1);
+            String message_before_dateStr = DateUtil.getDateText(message_before.getTimestamp());
+            if (dateStr.equals(message_before_dateStr)) {
+                holder.dateTimeContainer.setVisibility(View.GONE);
             }
-            else{
+            else {
                 holder.dateTimeContainer.setVisibility(View.VISIBLE);
             }
         }
-        else{
+        else {
             holder.dateTimeContainer.setVisibility(View.VISIBLE);
         }
-        holder.messageDay.setText(DateUtil.getDateText(message.getTimestamp()));
-        holder.timestampText.setText(DateUtil.sdf_short_hour.format(new Date(message.getTimestamp())));
     }
 
     @Override
@@ -106,7 +105,50 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MessageViewHol
             messageDay = itemView.findViewById(R.id.date_time);
             messageText = itemView.findViewById(R.id.messageText);
             timestampText = itemView.findViewById(R.id.timestampText);
+            messageContainer.setOnLongClickListener(view -> {
+                showPopupMenu(view, messageText);
+                return true; // Consume the event
+            });
+        }
+        private void showPopupMenu(View view, TextView messageText) {
+            PopupMenu popup = new PopupMenu(view.getContext(), view);
+            popup.getMenuInflater().inflate(R.menu.message_options_menu, popup.getMenu());
 
+            popup.setOnMenuItemClickListener(item -> handleMenuItemClick(item, messageText, view.getContext()));
+
+            popup.show();
+        }
+
+        private boolean handleMenuItemClick(MenuItem item, TextView messageText, Context context) {
+            if (item.getItemId() == R.id.copy_message) {
+                copyToClipboard(messageText.getText().toString(), context);
+                return true;
+            }
+            else if (item.getItemId() == R.id.share_message) {
+                shareMessage(messageText.getText().toString(), context);
+                return true;
+            }
+            else if (item.getItemId() == R.id.delete_message) {
+                Toast.makeText(context, "Message deleted", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+            else {
+                return true;
+            }
+        }
+
+        private void copyToClipboard(String text, Context context) {
+            ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("Copied Text", text);
+            clipboard.setPrimaryClip(clip);
+            Toast.makeText(context, "Copied to clipboard", Toast.LENGTH_SHORT).show();
+        }
+
+        private void shareMessage(String text, Context context) {
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType("text/plain");
+            shareIntent.putExtra(Intent.EXTRA_TEXT, text);
+            context.startActivity(Intent.createChooser(shareIntent, "Share via"));
         }
     }
 }

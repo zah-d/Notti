@@ -144,6 +144,7 @@ public class NoteActivity extends AppCompatActivity {
                 }
             }
         });
+
         noteAdapter.notifyDataSetChanged();
     }
 
@@ -168,7 +169,7 @@ public class NoteActivity extends AppCompatActivity {
                 int lastNewLine = s.toString().lastIndexOf("\n");
                 int lastLineLength = (lastNewLine == -1) ? s.length() : s.length() - lastNewLine - 1;
 
-                if (lastLineLength >= 20) {
+                if (lastLineLength >= 35) {
                     messageInput.append("\n"); // Automatically add a new line
                 }
             }
