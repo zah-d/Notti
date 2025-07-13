@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/copy_message"
-        android:title="Copy"
+        android:title=""
         android:icon="@android:drawable/ic_menu_edit"
-        android:itemBackground="@drawable/menu_item_ripple"/>
+        android:itemBackground="@drawable/menu_item_ripple_message"
+        app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/share_message"
-        android:title="Share"
+        android:title=""
         android:icon="@android:drawable/ic_menu_share"
-        android:itemBackground="@drawable/menu_item_ripple"/>
+        android:itemBackground="@drawable/menu_item_ripple_message"
+        app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/delete_message"
-        android:title="Delete"
+        android:title=""
         android:icon="@android:drawable/ic_menu_delete"
-        android:itemBackground="@drawable/menu_item_ripple"/>
+        android:itemBackground="@drawable/menu_item_ripple_message"
+        app:showAsAction="ifRoom" />
 </menu>

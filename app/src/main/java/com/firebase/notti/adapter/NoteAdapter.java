@@ -4,6 +4,8 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +25,8 @@ import com.firebase.notti.model.Note;
 import com.firebase.notti.model.NoteMessage;
 import com.firebase.notti.utils.DateUtil;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -111,8 +116,62 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MessageViewHol
             });
         }
         private void showPopupMenu(View view, TextView messageText) {
-            PopupMenu popup = new PopupMenu(view.getContext(), view);
+
+            LayoutInflater inflater = LayoutInflater.from(view.getContext());
+            View menuView = inflater.inflate(R.layout.view_icon_menu, null);
+
+            PopupWindow popup = new PopupWindow(menuView,
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    true); // focusable
+
+            popup.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            popup.setOutsideTouchable(true);
+
+            // Show it below your anchor view
+            // Show under the view that was long-clicked (i.e., anchorView = view)
+            popup.showAsDropDown(view, 0, 8);
+
+            // Handle clicks
+            menuView.findViewById(R.id.action_copy).setOnClickListener(v -> {
+                // handle copy
+                copyToClipboard(messageText.getText().toString(), view.getContext());
+                popup.dismiss();
+            });
+
+            menuView.findViewById(R.id.action_share).setOnClickListener(v -> {
+                // handle share
+                shareMessage(messageText.getText().toString(), view.getContext());
+                popup.dismiss();
+            });
+
+            menuView.findViewById(R.id.action_delete).setOnClickListener(v -> {
+                // handle delete
+                popup.dismiss();
+            });
+
+
+
+
+            /*PopupMenu popup = new PopupMenu(view.getContext(), view);
             popup.getMenuInflater().inflate(R.menu.message_options_menu, popup.getMenu());
+
+            // Force icons to show using reflection
+            try {
+                Field[] fields = popup.getClass().getDeclaredFields();
+                for (Field field : fields) {
+                    if ("mPopup".equals(field.getName())) {
+                        field.setAccessible(true);
+                        Object menuPopupHelper = field.get(popup);
+                        Class<?> classPopupHelper = Class.forName(menuPopupHelper.getClass().getName());
+                        Method setForceIcons = classPopupHelper.getMethod("setForceShowIcon", boolean.class);
+                        setForceIcons.invoke(menuPopupHelper, true);
+                        break;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             popup.setOnMenuItemClickListener(item -> handleMenuItemClick(item, messageText, view.getContext()));
 
@@ -135,8 +194,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MessageViewHol
             else {
                 return true;
             }
+        }*/
         }
-
         private void copyToClipboard(String text, Context context) {
             ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
             ClipData clip = ClipData.newPlainText("Copied Text", text);
@@ -149,6 +208,10 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MessageViewHol
             shareIntent.setType("text/plain");
             shareIntent.putExtra(Intent.EXTRA_TEXT, text);
             context.startActivity(Intent.createChooser(shareIntent, "Share via"));
+        }
+
+        private void deleteMessage(String text, Context context) {
+            Toast.makeText(context, "Message deleted", Toast.LENGTH_SHORT).show();
         }
     }
 }

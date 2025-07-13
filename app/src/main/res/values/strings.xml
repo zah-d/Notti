@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">Notti</string>
+    <string name="app_name">Stickee</string>
     <string name="title_activity_note_main">NoteMainActivity</string>
     <string name="title_notes">פתקים</string>
     <string name="title_groups">קבוצות</string>
-    <string name="title_notes2">Notti</string>
-    <string name="title_groups2">Notti</string>
+    <string name="title_notes2">Stickee</string>
+    <string name="title_groups2">Stickee</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_activity_fullscreen">FullscreenActivity</string>
     <string name="dummy_button">Dummy Button</string>

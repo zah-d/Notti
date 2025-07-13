@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Focused state -->
+    <item android:state_focused="true">
+        <shape android:shape="rectangle">
+            <solid android:color="#3366FF" /> <!-- focus color -->
+            <corners android:radius="8dp" />
+        </shape>
+    </item>
+
+    <!-- Pressed state -->
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="#4455AA" />
+            <corners android:radius="8dp" />
+        </shape>
+    </item>
+
+    <!-- Default state (reference existing bubble background) -->
+    <item android:drawable="@drawable/note_bubble" />
+</selector>
